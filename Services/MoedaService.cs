@@ -17,7 +17,7 @@ public class MoedaService : IMoedaService
         _logger = logger;
     }
 
-    async Task<ConversaoResponse> ConverterMoedaAsync(ConversaoRequest request)
+    public async Task<ConversaoResponse> ConverterMoedaAsync(ConversaoRequest request)
     {
         var moedaOrigem = await _context.Moedas.FirstOrDefaultAsync(m => m.Codigo == request.De);
 
@@ -53,12 +53,12 @@ public class MoedaService : IMoedaService
         };
     }
 
-    async Task<List<Moeda>> ListarMoedasAsync()
+    public async Task<List<Moeda>> ListarMoedasAsync()
     {
         return await _context.Moedas.ToListAsync();
     }
 
-    async Task AtualizarTaxasAsync()
+    public async Task AtualizarTaxasAsync()
     {
         try
         {
@@ -73,7 +73,7 @@ public class MoedaService : IMoedaService
         }
     }
 
-    async Task<List<Conversao>> ObterHistoricoAsync()
+    public async Task<List<Conversao>> ObterHistoricoAsync()
     {
         return await _context.Conversoes
             .OrderByDescending(c => c.DataConversao)
