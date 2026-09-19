@@ -1,4 +1,3 @@
-# Build results
 [Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/
@@ -14,54 +13,41 @@ bld/
 [Ll]og/
 [Ll]ogs/
 
-# Visual Studio cache/options directory
 .vs/
 
-# Visual Studio Code
 .vscode/
 *.code-workspace
 
-# Rider
 .idea/
 *.sln.iml
 
-# User-specific files
 *.rsuser
 *.suo
 *.user
 *.userosscache
 *.sln.docstates
 
-# Local History
 .history/
 
-# NuGet Packages
 *.nupkg
 *.snupkg
 *.nuget.props
 *.nuget.targets
 
-# Packages folder
 **/packages/*
 !**/packages/build/
 
-# Rider directories
 .idea/
 *.sln.iml
 
-# Application Insights
 ApplicationInsights.config
 
-# Mac files
 .DS_Store
 
-# Environment variables
 *.env
 .env
 .env.local
 
-# Runtime Data Folders
-data/
 logs/
 temp/
 tmp/
