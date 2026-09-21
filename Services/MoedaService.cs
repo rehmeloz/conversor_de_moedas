@@ -8,9 +8,9 @@ public class MoedaService : IMoedaService
 {
     private readonly AppDbContext _context;
     private readonly HttpClient _httpClient;
-    private readonly ILogger _logger;
+    private readonly ILogger<MoedaService> _logger;
 
-    public MoedaService(AppDbContext context, HttpClient httpClient, ILogger logger)
+    public MoedaService(AppDbContext context, HttpClient httpClient, ILogger<MoedaService> logger)
     {
         _context = context;
         _httpClient = httpClient;
