@@ -23,9 +23,6 @@ public class MoedaService : IMoedaService
 
         var moedaDestino = await _context.Moedas.FirstOrDefaultAsync(m => m.Codigo == request.Para);
 
-        if (moedaOrigem == null || moedaDestino == null)
-            throw new Exception("Moeda não encontrada");
-
         decimal taxa = moedaDestino.Taxa / moedaOrigem.Taxa;
         decimal resultado = request.Valor * taxa;
 

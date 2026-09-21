@@ -25,8 +25,7 @@ builder.Services.AddLogging();
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<IMoedaService, MoedaService>();
 
-builder.Services.AddValidatorsFromAssemblyContaining<ConversaoValidator>();
-builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<ConversaoValidator>(includeInternalTypes: true);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
