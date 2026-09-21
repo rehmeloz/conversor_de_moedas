@@ -2,6 +2,9 @@ using ConversorMoedas.Data;
 using ConversorMoedas.Services;
 using Serilog;
 using Microsoft.EntityFrameworkCore;
+using FluentValidation;
+using ConversorMoedas.Validators;
+using FluentValidation.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +24,9 @@ builder.Services.AddLogging();
 
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<IMoedaService, MoedaService>();
+
+builder.Services.AddValidatorsFromAssemblyContaining<ConversaoValidator>();
+builder.Services.AddFluentValidationAutoValidation();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

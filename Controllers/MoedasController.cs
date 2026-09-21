@@ -16,11 +16,15 @@ public class MoedasController : ControllerBase
     [HttpPost("converter")]
     public async Task<ActionResult<ConversaoResponse>> Converter([FromBody] ConversaoRequest request)
     {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
-
-        var resultado = await _service.ConverterMoedaAsync(request);
-        return Ok(resultado);
+        try
+        {
+            var resultado = await _service.ConverterMoedaAsync(request);
+            return Ok(resultado);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { erro = ex.Message });
+        }
     }
 
     [HttpGet("moedas")]
