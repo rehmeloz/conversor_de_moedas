@@ -9,25 +9,34 @@ public class MoedaService : IMoedaService
     private readonly AppDbContext _context;
     private readonly HttpClient _httpClient;
     private readonly ILogger<MoedaService> _logger;
+    private readonly IExchangeRateService _exchangeRateService;
 
-    public MoedaService(AppDbContext context, HttpClient httpClient, ILogger<MoedaService> logger)
+    public MoedaService(AppDbContext context, HttpClient httpClient, ILogger<MoedaService> logger, IExchangeRateService exchangeRateService)
     {
         _context = context;
         _httpClient = httpClient;
         _logger = logger;
+        _exchangeRateService = exchangeRateService;
     }
 
     public async Task<ConversaoResponse> ConverterMoedaAsync(ConversaoRequest request)
     {
-        var moedaOrigem = await _context.Moedas.FirstOrDefaultAsync(m => m.Codigo == request.De);
+        var moedaOrigem = await _context.Moedas
+            .FirstOrDefaultAsync(m => m.Codigo == request.De);
 
-        var moedaDestino = await _context.Moedas.FirstOrDefaultAsync(m => m.Codigo == request.Para);
+        var moedaDestino = await _context.Moedas
+            .FirstOrDefaultAsync(m => m.Codigo == request.Para);
 
-        decimal taxa = moedaDestino.Taxa / moedaOrigem.Taxa;
+        var taxas = await _exchangeRateService.ObterTaxasAsync("USD");
+
+        decimal taxaOrigem = taxas.ContainsKey(request.De) ? taxas[request.De] : moedaOrigem.Taxa;
+        decimal taxaDestino = taxas.ContainsKey(request.Para) ? taxas[request.Para] : moedaDestino.Taxa;
+
+        decimal taxa = taxaDestino / taxaOrigem;
         decimal resultado = request.Valor * taxa;
 
         var conversao = new Conversao
-        { 
+        {
             MoedaOrigem = request.De,
             MoedaDestino = request.Para,
             Valor = request.Valor,
@@ -38,6 +47,8 @@ public class MoedaService : IMoedaService
 
         _context.Conversoes.Add(conversao);
         await _context.SaveChangesAsync();
+
+        _logger.LogInformation($"Conversão realizada: {request.Valor} {request.De} = {resultado} {request.Para}");
 
         return new ConversaoResponse
         {
@@ -59,14 +70,27 @@ public class MoedaService : IMoedaService
     {
         try
         {
-            var response = await _httpClient.GetFromJsonAsync<dynamic>(
-                "https://api.exchangerate-api.com/v4/latest/USD");
+            var taxas = await _exchangeRateService.ObterTaxasAsync("USD");
 
-            _logger.LogInformation("Taxas atualizadas com sucesso!");
+            var moedas = await _context.Moedas.ToListAsync();
+
+            foreach (var moeda in moedas)
+            {
+                if (taxas.ContainsKey(moeda.Codigo))
+                {
+                    moeda.Taxa = taxas[moeda.Codigo];
+                    moeda.UltimaAtualizacao = DateTime.Now;
+                }
+            }
+
+            await _context.SaveChangesAsync();
+
+            _logger.LogInformation("Taxas atualizadas com sucesso a partir da API!");
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             _logger.LogError($"Erro ao atualizar taxas: {ex.Message}");
+            throw;
         }
     }
 

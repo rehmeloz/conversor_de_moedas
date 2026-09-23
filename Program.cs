@@ -22,9 +22,10 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddLogging();
 
+builder.Services.AddMemoryCache();
 builder.Services.AddHttpClient();
+builder.Services.AddScoped<IExchangeRateService, ExchangeRateService>();
 builder.Services.AddScoped<IMoedaService, MoedaService>();
-
 builder.Services.AddValidatorsFromAssemblyContaining<ConversaoValidator>(includeInternalTypes: true);
 
 builder.Services.AddControllers();

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ConversorMoedas.Models;
 using ConversorMoedas.Services;
+using ConversorMoedas.Validators;
 using FluentValidation;
 
 [ApiController]
@@ -9,11 +10,16 @@ public class MoedasController : ControllerBase
 {
     private readonly IMoedaService _service;
     private readonly IValidator<ConversaoRequest> _validator;
+    private readonly ILogger<MoedasController> _logger;
 
-    public MoedasController(IMoedaService service, IValidator<ConversaoRequest> validator)
+    public MoedasController(
+        IMoedaService service,
+        IValidator<ConversaoRequest> validator,
+        ILogger<MoedasController> logger)
     {
         _service = service;
         _validator = validator;
+        _logger = logger;
     }
 
     [HttpPost("converter")]
@@ -39,6 +45,7 @@ public class MoedasController : ControllerBase
         }
         catch (Exception ex)
         {
+            _logger.LogError($"Erro na conversão: {ex.Message}");
             return BadRequest(new { erro = ex.Message });
         }
     }
@@ -60,7 +67,15 @@ public class MoedasController : ControllerBase
     [HttpPost("atualizar-taxas")]
     public async Task<IActionResult> AtualizarTaxas()
     {
-        await _service.AtualizarTaxasAsync();
-        return Ok("Taxas atualizadas");
+        try
+        {
+            await _service.AtualizarTaxasAsync();
+            return Ok(new { mensagem = "Taxas atualizadas com sucesso!" });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Erro ao atualizar taxas: {ex.Message}");
+            return BadRequest(new { erro = ex.Message });
+        }
     }
 }
