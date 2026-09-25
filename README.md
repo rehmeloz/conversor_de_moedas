@@ -11,7 +11,8 @@ Sistema de conversão de moedas desenvolvido com uma arquitetura moderna e escal
 - **SQLite** — Banco de dados relacional leve
 - **FluentValidation** — Validação de dados com regras assíncronas
 - **Serilog** — Logging estruturado
-- **Autenticação com JWT** — Transmite informações de forma segura 
+- **Autenticação com JWT** — Transmite informações de forma segura
+- **xUnit** — Ferramenta de teste unitário
 
 ## Funcionalidades
 
@@ -23,6 +24,7 @@ Sistema de conversão de moedas desenvolvido com uma arquitetura moderna e escal
 - **Atualizar taxas** de câmbio (estrutura preparada para integração com API real)
 - **API REST** bem estruturada
 - **Autenticação com JWT** para proteção de endpoint's da API com Token
+- **Testes - xUnit** com cobertura de validadores e serviços
 
 
 
