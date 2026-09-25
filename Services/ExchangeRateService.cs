@@ -1,5 +1,4 @@
-﻿using System.Net.Http.Json;
-using System.Text.Json;
+﻿using System.Text.Json;
 using ConversorMoedas.Models;
 using Microsoft.Extensions.Caching.Memory;
 
@@ -24,7 +23,7 @@ namespace ConversorMoedas.Services
         {
             string cacheKey = $"exchange_rates_{moedaBase}";
 
-            if (_cache.TryGetValue(cacheKey, out Dictionary<string, decimal> cachedRates))
+            if (_cache.TryGetValue(cacheKey, out Dictionary<string, decimal>? cachedRates) && cachedRates != null)
             {
                 _logger.LogInformation($"Taxas obtidas do CACHE para {moedaBase}");
                 return cachedRates;
@@ -32,8 +31,8 @@ namespace ConversorMoedas.Services
 
             try
             {
-                var baseUrl = _configuration["ExchangeRateApi:BaseUrl"];
-                var apiKey = _configuration["ExchangeRateApi:ApiKey"];
+                var baseUrl = _configuration["ExchangeRateApi:BaseUrl"] ?? "";
+                var apiKey = _configuration["ExchangeRateApi:ApiKey"] ?? "";
 
                 _logger.LogInformation($"Obtendo taxas para: {moedaBase}");
 
@@ -68,7 +67,7 @@ namespace ConversorMoedas.Services
 
                 var exchangeResponse = JsonSerializer.Deserialize<ExchangeRateResponse>(content, options);
 
-                if (exchangeResponse == null || exchangeResponse.Rates == null || exchangeResponse.Rates.Count == 0)
+                if (exchangeResponse?.Rates == null || exchangeResponse.Rates.Count == 0)
                 {
                     _logger.LogError($"Resposta vazia ou inválida da API");
                     throw new Exception("Resposta vazia ou inválida da API");

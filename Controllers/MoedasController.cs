@@ -1,21 +1,19 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ConversorMoedas.Models;
 using ConversorMoedas.Services;
-using ConversorMoedas.Validators;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class MoedasController : ControllerBase
 {
     private readonly IMoedaService _service;
     private readonly IValidator<ConversaoRequest> _validator;
     private readonly ILogger<MoedasController> _logger;
 
-    public MoedasController(
-        IMoedaService service,
-        IValidator<ConversaoRequest> validator,
-        ILogger<MoedasController> logger)
+    public MoedasController(IMoedaService service, IValidator<ConversaoRequest> validator, ILogger<MoedasController> logger)
     {
         _service = service;
         _validator = validator;

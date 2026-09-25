@@ -8,6 +8,7 @@ public class AppDbContext : DbContext
     
     public DbSet<Moeda> Moedas {  get; set; }
     public DbSet<Conversao> Conversoes { get; set; }
+    public DbSet<User> Users { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
