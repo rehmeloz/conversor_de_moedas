@@ -51,3 +51,13 @@ ApplicationInsights.config
 logs/
 temp/
 tmp/
+
+appsettings.Development.json
+appsettings.Production.json
+appsettings.Local.json
+
+*.db
+*.db-shm
+*.db-wal
+
+secrets.json
