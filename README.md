@@ -1,4 +1,4 @@
-# Conversor de Moedas
+# API para Conversão de Moedas
 
 Sistema de conversão de moedas desenvolvido com uma arquitetura moderna e escalável. A aplicação permite realizar conversões entre diferentes moedas, mantendo um histórico de transações e validações robustas em tempo real.
 
